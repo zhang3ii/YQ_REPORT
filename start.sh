@@ -1,2 +1,2 @@
-uwsgi --ini test_uwsgi.ini --sage-pidfile ./uwsgi.pid
+uwsgi --ini test_uwsgi.ini --safe-pidfile ./uwsgi.pid
 sleep 5
