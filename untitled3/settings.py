@@ -25,7 +25,9 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'untitled3'))
 SECRET_KEY = 'qxo64l7lm22y7!kw=4shc5*izt%yyx%u=@@8eg%6h4f=k@e^gs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -44,7 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-# REST_FRAMEWORK = {
+REST_FRAMEWORK = {
 # # 'DEFAULT_RENDERER_CLASSES': (
 # #        'rest_framework.renderers.JSONRenderer',
 # #     ),
@@ -53,7 +55,7 @@ INSTALLED_APPS = [
 #     # 'DEFAULT_PERMISSION_CLASSES': [
 #         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     # ]
-# }
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
