@@ -121,10 +121,10 @@ WSGI_APPLICATION = 'untitled3.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sina',
-        'USER': 'xiaoshubiao',
-        'PASSWORD': '654321',
-        'HOST': '172.16.201.20',
+        'NAME': 'test',
+        'USER': 'yellowmovie',
+        'PASSWORD': 'xZHGxemJ8W5WdSSk',
+        'HOST': '148.70.148.229',
         'PORT': '3306',
     }
 }
