@@ -21,9 +21,9 @@ def WordSearch(request):
 
 def searchWord(pageNum, keyword):
     if not keyword:
-        data = list(SearchReport.objects.all().values())
+        data = list(SearchReport.objects.all().order_by('-report_time').values())
     else:
-        data = list(SearchReport.objects.filter(title__icontains=keyword).values())
+        data = list(SearchReport.objects.filter(title__icontains=keyword).order_by('-report_time').values())
     totalPnum, begin, end = countPage(len(data), size=15, p=pageNum)
     page_nums = (len(data)//15 + 1) * 10
     if int(pageNum) <= totalPnum:
