@@ -35,6 +35,7 @@ def searchWord(pageNum, keyword):
 def countPage(total, size=15, p=1):
     if total % size == 0:
         totalPnum = int(total / size)
+    # test
     else:
         totalPnum = int(total / size) + 1
     begin = (p - 1) * size
