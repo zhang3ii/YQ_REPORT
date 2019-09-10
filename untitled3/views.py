@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import SearchReport
 from django.db.models import Count
+from untitled3.cache.datache import DataCache
 
 @api_view(['GET', 'POST'])
 def WordSearch(request):
@@ -21,9 +22,9 @@ def WordSearch(request):
 
 def searchWord(pageNum, keyword):
     if not keyword:
-        data = list(SearchReport.objects.all().order_by('-report_time').values())
+        data = DataCache().getValueFromCache('')
     else:
-        data = list(SearchReport.objects.filter(title__icontains=keyword).order_by('-report_time').values())
+        data = DataCache().getValueFromCache(keyword)
     totalPnum, begin, end = countPage(len(data), size=15, p=pageNum)
     page_nums = (len(data)//15 + 1) * 10
     if int(pageNum) <= totalPnum:

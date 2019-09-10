@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
+from django.views.decorators.cache import cache_page
 
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^api/page/', views.WordSearch, name='页面'),
+    url(r'^api/page/', cache_page(60 * 60)(views.WordSearch), name='页面'),
     url(r'^api/update/', views.collect_api, name='更新'),
     url(r'^api/report/', views.today_report, name='日期周报'),
     url(r'^api/report_list/', views.group_time, name='周报列表'),
