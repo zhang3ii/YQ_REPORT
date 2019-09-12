@@ -13,7 +13,7 @@ class DataCache:
         return data
 
     def getDataAll(self):
-        data = list(SearchReport.objects.all().order_by('-report_time').values())
+        data = SearchReport.objects.all().values('id').order_by('-report_time')
         return data
 
     def getValueFromCache(self, keyword):
@@ -28,3 +28,15 @@ class DataCache:
                 result = self.getDataAll()
                 self.cache.set('getalldata', result, self.timeout)
         return result
+
+def getMsgFromDatabase(idListDic):
+    l = []
+    for id in idListDic:
+        l.append(id['id'])
+    if idListDic == []:
+        data = []
+    else:
+        data = list(SearchReport.objects.filter(id__in=l).values())
+        # 这里报错了
+    return data
+

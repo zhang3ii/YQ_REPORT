@@ -4,10 +4,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import SearchReport
 from django.db.models import Count
-from untitled3.cache.datache import DataCache
+from untitled3.cache.datache import DataCache,getMsgFromDatabase
 
 @api_view(['GET', 'POST'])
 def WordSearch(request):
+    #index页面数据
     pageNum = int(request.GET.get('pageNum', '1'))
     keyword = request.GET.get('keyword', '')
     rsp = {'status': status.HTTP_200_OK, 'msg': 'ok'}
@@ -21,19 +22,31 @@ def WordSearch(request):
     return Response(rsp)
 
 def searchWord(pageNum, keyword):
+    #获取数据逻辑
     if not keyword:
-        data = DataCache().getValueFromCache('')
+        # 从缓存获取ID列表
+        idList = DataCache().getValueFromCache('')
     else:
-        data = DataCache().getValueFromCache(keyword)
-    totalPnum, begin, end = countPage(len(data), size=15, p=pageNum)
-    page_nums = (len(data)//15 + 1) * 10
+        idList = DataCache().getValueFromCache(keyword)
+    # 分页将id切割
+    totalPnum, begin, end = countPage(len(idList), size=15, p=pageNum)
     if int(pageNum) <= totalPnum:
-        outputData = data[begin:end]
+        outputidData = idList[begin:end]
     else:
-        outputData = []
-    return (outputData,page_nums)
+        outputidData = []
+
+    # 通过id从数据库中获取具体内容
+    finData = getMsgFromDatabase(outputidData)
+    page_nums = (len(idList)//15 + 1) * 10
+    return (finData,page_nums)
+
+def get_data_by_id(data_id):
+    result = SearchReport.objects.filter(id=data_id).values()
+    return result
+
 
 def countPage(total, size=15, p=1):
+    #获得分页数
     if total % size == 0:
         totalPnum = int(total / size)
     # test
@@ -45,6 +58,7 @@ def countPage(total, size=15, p=1):
 
 @api_view(['GET', 'POST'])
 def collect_api(request):
+    #收藏
     edit_id = int(request.GET.get('edit_id', '1'))
     rsp = {'status': status.HTTP_200_OK, 'msg': 'ok'}
     try:
@@ -55,6 +69,7 @@ def collect_api(request):
     return Response(rsp)
 
 def update_statue(edit_id):
+    #收藏标记
     dt = datetime.now()
     n = dt.strftime('%W')
     title = '第' + n + '周舆情周报'
@@ -62,6 +77,7 @@ def update_statue(edit_id):
 
 @api_view(['GET', 'POST'])
 def today_report(request):
+    #周报列表
     keyword = request.GET.get('report_title', '')
     rsp = {'status': status.HTTP_200_OK, 'msg': 'ok'}
     datas = list(SearchReport.objects.filter(collect_time=keyword).values())

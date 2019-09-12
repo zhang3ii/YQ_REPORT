@@ -8,6 +8,7 @@
 from django.db import models
 
 class SearchReport(models.Model):
+    # id = models.AutoField(verbose_name='id',db_column='id',primary_key=True)
     title = models.CharField(max_length=255, blank=True, null=True)
     digest = models.CharField(max_length=400, blank=True, null=True)
     url = models.CharField(max_length=800, blank=True, null=True)
