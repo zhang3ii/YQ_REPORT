@@ -8,20 +8,23 @@ class DataCache:
         self.cache = caches[cacheName]
         self.timeout = timeout
 
-    def getData(self, keyword):
-        data = list(SearchReport.objects.filter(title__icontains=keyword).order_by('-report_time').values())
+    def getData(self, keyword, searchWord):
+        if keyword != '' and searchWord != '':
+            data = list(SearchReport.objects.filter(title__icontains=keyword, statue=1, source=searchWord).order_by('-report_time').values())
+        elif keyword == '' and searchWord != '':
+            data = list(SearchReport.objects.filter(statue=1, source=searchWord).order_by('-report_time').values())
+        else:
+            data = list(SearchReport.objects.filter(title__icontains=keyword, statue=1).order_by('-report_time').values())
         return data
 
     def getDataAll(self):
-        data = SearchReport.objects.all().values('id').order_by('-report_time')
+        data = SearchReport.objects.filter(statue=1).values('id').order_by('-report_time')
         return data
 
-    def getValueFromCache(self, keyword):
-        if keyword:
-            result = self.cache.get(keyword)
-            if not result:
-                result = self.getData(keyword)
-                self.cache.set(keyword, result, self.timeout)
+    def getValueFromCache(self, keyword, searchWord):
+        if keyword or searchWord:
+            result = self.getData(keyword, searchWord)
+            self.cache.set(keyword, result, self.timeout)
         else:
             result = self.cache.get('getalldata')
             if not result:
@@ -36,7 +39,6 @@ def getMsgFromDatabase(idListDic):
     if idListDic == []:
         data = []
     else:
-        data = list(SearchReport.objects.filter(id__in=l).values())
-        # 这里报错了
+        data = list(SearchReport.objects.filter(id__in=l, statue=1).values())
     return data
 
