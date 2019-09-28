@@ -10,11 +10,11 @@ class DataCache:
 
     def getData(self, keyword, searchWord):
         if keyword != '' and searchWord != '':
-            data = list(SearchReport.objects.filter(title__icontains=keyword, statue=1, source=searchWord).order_by('-report_time').values())
+            data = SearchReport.objects.filter(title__icontains=keyword, statue=1, source=searchWord).values('id').order_by('-report_time')
         elif keyword == '' and searchWord != '':
-            data = list(SearchReport.objects.filter(statue=1, source=searchWord).order_by('-report_time').values())
+            data = SearchReport.objects.filter(statue=1, source=searchWord).values('id').order_by('-report_time')
         else:
-            data = list(SearchReport.objects.filter(title__icontains=keyword, statue=1).order_by('-report_time').values())
+            data = SearchReport.objects.filter(title__icontains=keyword, statue=1).values('id').order_by('-report_time')
         return data
 
     def getDataAll(self):

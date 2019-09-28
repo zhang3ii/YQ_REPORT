@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import SearchReport
 from django.db.models import Count,Q
-from untitled3.cache.datache import DataCache,getMsgFromDatabase
+from untitled3.cache.datache import DataCache, getMsgFromDatabase
 
 @api_view(['GET', 'POST'])
 def WordSearch(request):
@@ -95,12 +95,11 @@ def searchWord(pageNum, keyword, searchWord):
     #获取数据逻辑
     if not keyword and not searchWord:
         # 从缓存获取ID列表
-        print('all no')
         idList = DataCache().getValueFromCache('', '')
     else:
-        print('have')
         idList = DataCache().getValueFromCache(keyword, searchWord)
     # 分页将id切割
+    print(idList)
     totalPnum, begin, end = countPage(len(idList), size=15, p=pageNum)
     if int(pageNum) <= totalPnum:
         outputidData = idList[begin:end]
@@ -111,9 +110,6 @@ def searchWord(pageNum, keyword, searchWord):
     page_nums = (len(idList)//15 + 1) * 10
     return (finData, page_nums)
 
-def get_data_by_id(data_id):
-    result = SearchReport.objects.filter(id=data_id).values()
-    return result
 
 def countPage(total, size=15, p=1):
     #获得分页数
